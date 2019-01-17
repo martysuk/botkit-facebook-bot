@@ -1,4 +1,6 @@
 .env
 db
 node_modules
+helper.js
+.eslintrc.json
 components/routes/_*
