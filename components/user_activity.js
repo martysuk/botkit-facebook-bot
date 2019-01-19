@@ -1,11 +1,8 @@
 const request = require('request');
-const env = require('node-env-file');
 
 const { User } = require('./models/user.js');
 const { Order } = require('./models/order.js');
 
-
-env('../botkit-facebook-bot/.env');
 
 const quick_replies = [{
   content_type: 'text',

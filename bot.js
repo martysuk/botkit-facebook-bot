@@ -1,10 +1,7 @@
-const env = require('node-env-file');
 const Botkit = require('botkit');
 
 const { usage_tip } = require(`${__dirname}/components/user_activity.js`);
-
-
-(require(`${__dirname}/.env`).config({ silent: process.env.NODE_ENV === 'production' }));
+require('dotenv').config()
 
 // the Botkit controller, which controls all instances of the bot
 const controller = Botkit.facebookbot({ 
