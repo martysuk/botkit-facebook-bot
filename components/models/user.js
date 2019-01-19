@@ -1,9 +1,24 @@
-//fields in the model:
-// -id = fb id
-// -first and last names : from getUserInfo (str)
-// -purchases(arr of objects)
-//      -id or sku
-//      -given feedback (from 1 to 10)
-//      -date & time
-// -favourites(arr)
-// -invitesActivated
+const mongoose = require('mongoose');
+
+const UserSchema = new mongoose.Schema({
+  facebookID: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  fullName: {
+    type: String,
+  },
+  purchases: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+  favourites: {
+    type: Array,
+  },
+  invitesActivated: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const User = mongoose.model('User', UserSchema);
+
+module.exports = { User };

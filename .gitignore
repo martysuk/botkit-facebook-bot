@@ -1,6 +1,5 @@
 .env
-db
 node_modules
-helper.js
-.eslintrc.json
+.eslintrc
 components/routes/_*
+components/user_activity.js
