@@ -9,7 +9,7 @@ module.exports = (controller) => {
   webserver.use(bodyParser.urlencoded({ extended: true }));
 
   // import express middlewares that are present in /components/express_middleware
-  normalizedPath = require('path').join(__dirname, 'express_middleware');
+  let normalizedPath = require('path').join(__dirname, 'express_middleware');
   require('fs').readdirSync(normalizedPath).forEach((file) => {
     require(`./express_middleware/${file}`)(webserver, controller);
   });
@@ -22,8 +22,8 @@ module.exports = (controller) => {
   });
 
   // import all the pre-defined routes that are present in /components/routes
-  const normalizedPath = require('path').join(__dirname, 'routes');
-  require('fs').readdirSync(normalizedPath).forEach((file) => {
+  let anotherNormalizedPath = require('path').join(__dirname, 'routes');
+  require('fs').readdirSync(anotherNormalizedPath).forEach((file) => {
     require(`./routes/${file}`)(webserver, controller);
   });
 
