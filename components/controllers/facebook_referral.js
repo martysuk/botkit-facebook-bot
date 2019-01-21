@@ -2,7 +2,8 @@
 
 // referral program
 
-const { getUserInfo, linkActivated } = require(`${__dirname}../../user_activity.js`);
+const { getUserInfo } = require(`${__dirname}../../user_activity.js`);
+const { linkActivated } = require(`${__dirname}../../referral_program.js`);
 
 module.exports = (controller) => {
   controller.on('facebook_referral', async (bot, message) => {

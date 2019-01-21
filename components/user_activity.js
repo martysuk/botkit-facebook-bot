@@ -3,27 +3,9 @@ const request = require('request');
 const { User } = require('./models/user.js');
 const { Order } = require('./models/order.js');
 
-
-const quick_replies = [{
-  content_type: 'text',
-  title: 'Back to main menu',
-  payload: 'mainMenu',
-}];
-
-const goToShopOrMenu = [{
-  content_type: 'text',
-  title: 'Yes',
-  payload: 'shop',
-}, {
-  content_type: 'text',
-  title: 'No',
-  payload: 'mainMenu',
-}];
-
-
-const linkToBot = 'm.me/420306645177226';
-
 const { shopGoods, aboutProduct } = require(`${__dirname}/best_buy_modules/api_usage.js`);
+const { goBackToMainMenu, goToShopOrMenu } = require(`${__dirname}/all_quick_replies.js`);
+
 
 const usage_tip = () => {
   console.log('~~~~~~~~~~');
@@ -53,38 +35,6 @@ const getUserInfo = async userID => new Promise(async (resolve, reject) => {
 }).catch((error) => { console.log(error.message); }); // не ловить помилки
 
 
-const linkActivated = async (bot, activatorID, referral) => {
-  const referralID = referral.ref;
-  if (activatorID != referralID) {
-    const userInfo = await getUserInfo(activatorID).catch(err => console.log(err));
-    const name = userInfo ? `${userInfo.first_name} ${userInfo.last_name}` : 'new user';
-
-    bot.say({ channel: referralID, text: `Your link was activated by ${name}. Congrats!` });
-
-    // get to database, findByID, invitesActivated++
-    const updatedUser = User.findOnepdate({ facebookID: referralID }, { $inc: { invitesActivated: 1 } }, { new: true });
-    if (updatedUser.invitesActivated >= 3) {
-      bot.say({ channel: referralID, text: 'Your link was activated 3 times!\n You can get your free product now. Will get in touch with you later', quick_replies });
-    }
-  }
-};
-
-const referralProgram = (bot, userID) => {
-  const referralLink = `${linkToBot}?ref=${userID}`;
-  User.find({ facebookID: userID }, 'invitesActivated', (err, user) => {
-    if (err) {
-      return console.log(err);
-    }
-
-    if (user) {
-      bot.say({ channel: userID, text: `Your referral link is ${referralLink} \nYour link was activated ${user.invitesActivated} times by now.\nRemember that you can invite 3 friends and get one product for free!`, quick_replies });
-    } else {
-      bot.say({ channel: userID, text: `Your referral link is ${referralLink} \nInvite 3 friends and get on product for free!`, quick_replies });
-      addNewUserToDB(userID);
-    }
-  }).catch(err => console.log(err));
-};
-
 const addNewUserToDB = async (userID) => {
   const userInfo = await getUserInfo(userID).catch(err => console.log(err));
   const user = new User({
@@ -95,7 +45,7 @@ const addNewUserToDB = async (userID) => {
   });
   user.save().then((doc) => {
     // res.send(doc);
-  }, (err) => /* res.status(400).send(err) */{});
+  }, (err) => /* res.status(400).send(err) */ { });
 };
 
 const getUserPurchases = (bot, userID) => {
@@ -124,7 +74,7 @@ const getUserPurchases = (bot, userID) => {
       bot.say({
         channel: userID,
         text: 'Your last purchases',
-        quick_replies,
+        quick_replies: goBackToMainMenu,
       });
     }
   }).catch(err => console.log(err));
@@ -148,7 +98,7 @@ const getUserFavourites = (bot, userID) => {
       // get all from DB, send last 5 by buttons + buttons [next 5, main menu]
       // let quick_replies = quick_replies.push(..nextFiveFavourites)
       // if(length > 5){ +next button }
-      bot.reply(userID, 'Your last purchases', quick_replies);
+      bot.reply(userID, { text: 'Your last purchases', quick_replies: goBackToMainMenu });
     }
   }).catch(err => console.log(err));
 };
@@ -177,7 +127,7 @@ const feedbackTwoDaysAfter = (bot, message) => {
           convo.say({
             channel: recentClientsArr[i].facebookID,
             text: 'Thanks for your feedback! See you :)',
-            quick_replies,
+            quick_replies: goBackToMainMenu,
           });
         });
       });
@@ -189,10 +139,8 @@ const feedbackTwoDaysAfter = (bot, message) => {
 module.exports = {
   usage_tip,
   getUserInfo,
-  linkActivated,
-  referralProgram,
   getUserPurchases,
   getUserFavourites,
   feedbackTwoDaysAfter,
-  addNewUserToDB,
+  addNewUserToDB
 };

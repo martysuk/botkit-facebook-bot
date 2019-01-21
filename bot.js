@@ -21,7 +21,7 @@ const webserver = require(`${__dirname}/components/express_webserver.js`)(contro
 // Tell Facebook to start sending events to this application
 require(`${__dirname}/components/subscribe_events.js`)(controller);
 
-// Set up Facebook "thread settings" such as get started button, persistent menu
+// Set up Facebook "messenger profile" settings such as get started button, persistent menu
 require(`${__dirname}/components/messenger_profile.js`)(controller);
 
 // Send an onboarding message when a user activates the bot
@@ -33,11 +33,6 @@ require(`${__dirname}/components/plugin_glitch.js`)(controller);
 // Get all needed controllers
 require(`${__dirname}/components/controllers/facebook_referral.js`)(controller);
 require(`${__dirname}/components/controllers/messages_and_postbacks.js`)(controller);
-
-// const normalizedPath = require("path").join(__dirname, "components/controllers");
-// require("fs").readdirSync(normalizedPath).forEach(function (file) {
-//     require("/components/controllers/" + file)(controller);
-// });
 
 
 if (!process.env.page_token) {
@@ -57,6 +52,3 @@ if (!process.env.best_buy_key) {
   usage_tip();
   process.exit(1);
 }
-
-
-// await-to-npm

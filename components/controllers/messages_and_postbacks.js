@@ -1,13 +1,12 @@
 const cron = require('node-cron');
 
-
+const { getUserInfo, getUserPurchases, getUserFavourites, getUserPurchasesOfDay,
+  feedbackTwoDaysAfter, addNewUserToDB } = require(`${__dirname}../../user_activity.js`);
+  
 const { shopGoods, aboutProduct } = require(`${__dirname}../../best_buy_modules/api_usage.js`);
-const {
-  getUserInfo, getUserPurchases, linkActivated, getUserFavourites,
-  referralProgram, getUserPurchasesOfDay, feedbackTwoDaysAfter, addNewUserToDB,
-} = require(`${__dirname}../../user_activity.js`);
-
+const { linkActivated, getMyReferral } = require(`${__dirname}../../referral_program.js`);
 const { makePurchase } = require(`${__dirname}../../make_purchase.js`);
+const quick_replies = require(`${__dirname}../../all_quick_replies.js`).mainMenu;
 
 
 // cron function that is called once a day to check all users that have bought smth 2 days ago to gather the feedback
@@ -17,48 +16,28 @@ const gatherFeedback = cron.schedule('0 20 1-31 1-12 *', () => {
 
 
 module.exports = (controller) => {
-  const quick_replies = [
-    {
-      content_type: 'text',
-      title: '👛My purchases',
-      payload: 'userPurchases',
-    },
-    {
-      content_type: 'text',
-      title: '🏣Shop',
-      payload: 'shop',
-    },
-    {
-      content_type: 'text',
-      title: '🌟Favourites',
-      payload: 'userFavourites',
-    },
-    {
-      content_type: 'text',
-      title: '🙋‍Invite a friend',
-      payload: 'userReferralLink',
-    },
-  ];
 
   gatherFeedback.start();
 
+
   controller.on('message_received,facebook_postback', async (bot, message) => {
+
     if (message.text) {
-      const userInfo = await getUserInfo(message.user).catch(err => console.log(err));
-      if (!userInfo) {
-        userInfo.first_name = 'new user';
-      }
-      console.log(message)
 
       if (message.payload) {
+
         switch (message.payload) {
           case 'testingBuyButton':
             makePurchase(bot, message);
             break;
           case 'startButton':
+            const userInfo = await getUserInfo(message.user).catch(err => console.log(err));
+            if (!userInfo) {
+              userInfo.first_name = 'new user';
+            }
             bot.replyWithTyping(message, { text: `Hello, ${userInfo.first_name}. Nice to meet you here!\nChoose the option: `, quick_replies });
             if (message.referral) {
-              linkActivated(bot, message, message.referral);
+              linkActivated(bot, message.user, message.referral); //if user entered the chat with bot for the first time
             }
             break;
           case 'sendCatalogue':
@@ -88,7 +67,7 @@ module.exports = (controller) => {
             // shopGoods(bot)
             break;
           case 'userReferralLink':
-            referralProgram(bot, message.user);
+            getMyReferral(bot, message);
             break;
           case 'purchaseOfDay':
             bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
