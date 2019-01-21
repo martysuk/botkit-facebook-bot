@@ -2,7 +2,7 @@ const request = require('request');
 const { getUserInfo } = require(`${__dirname}/user_activity.js`);
 const { goBackToMainMenu, referralSystems, mainMenu } = require(`${__dirname}/all_quick_replies.js`);
 
-const linkToBot = 'm.me/420306645177226';
+const linkToBot = 'm.me/715193352215470';
 
 const linkActivated = async (bot, activatorID, referral) => {
     const referralID = referral.ref;
