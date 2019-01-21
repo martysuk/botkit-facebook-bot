@@ -1,7 +1,7 @@
 const debug = require('debug')('botkit:messenger_profile');
 
 module.exports = (controller) => {
-  debug('Configuring Facebook thread settings...');
+  debug('Configuring Facebook messenger_profile settings...');
   controller.api.messenger_profile.greeting('Hello! I am here to help you :)');
   controller.api.messenger_profile.get_started('startButton');
   controller.api.messenger_profile.menu([

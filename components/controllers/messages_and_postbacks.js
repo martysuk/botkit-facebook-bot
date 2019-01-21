@@ -48,17 +48,26 @@ module.exports = (controller) => {
       if (!userInfo) {
         userInfo.first_name = 'new user';
       }
+      console.log(message)
 
-      if (message.payload === 'testingBuyButton') { makePurchase(bot, message); }
-
-      if (message.payload === 'startButton') {
-        bot.replyWithTyping(message, { text: `Hello, ${userInfo.first_name}. Nice to meet you here!\nChoose the option: `, quick_replies });
-        if (message.referral) {
-          linkActivated(bot, message, message.referral);
+      if (message.payload) {
+        switch (message.payload) {
+          case 'testingBuyButton':
+            makePurchase(bot, message);
+            break;
+          case 'startButton':
+            bot.replyWithTyping(message, { text: `Hello, ${userInfo.first_name}. Nice to meet you here!\nChoose the option: `, quick_replies });
+            if (message.referral) {
+              linkActivated(bot, message, message.referral);
+            }
+            break;
+          case 'sendCatalogue':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
+            break;
+          case 'mainMenu':
+            bot.say({ channel: message.user, text: 'Choose the option:', quick_replies });
+            break;
         }
-      }
-      if (message.payload == 'mainMenu') {
-        bot.say({ channel: message.user, text: 'Choose the option:', quick_replies });
       }
 
       if (message.quick_reply) {
@@ -67,27 +76,34 @@ module.exports = (controller) => {
             bot.say({ channel: message.user, text: 'Choose the option:', quick_replies });
             break;
           case 'userPurchases':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // getUserPurchases(bot, message.user)
             break;
           case 'userFavourites':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // getUserFavourites(bot, message.user)
             break;
           case 'shop':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // shopGoods(bot)
             break;
           case 'userReferralLink':
             referralProgram(bot, message.user);
             break;
           case 'purchaseOfDay':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // getUserPurchasesOfDay(bot, message.user, message.text)
             break;
           case 'product':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // aboutProduct(bot, message.text)
             break;
           case 'repeat':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // aboutProduct(bot, message.text)
             break;
           case 'buy':
+            bot.say({ channel: message.user, text: 'Sorry, I am not developed yet. But soon I will work:)', quick_replies });
             // makePurchase(bot, message)
             break;
         }
