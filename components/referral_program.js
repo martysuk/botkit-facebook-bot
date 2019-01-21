@@ -72,7 +72,8 @@ const getMyReferral = (bot, message) => {
                         }
                     ]
                 }
-            }
+            },
+            quick_replies: goBackToMainMenu
         }, 'messenger_code');
 
         convo.addMessage({text: 'Choose the option:', quick_replies: mainMenu}, 'backToMainMenu')
